@@ -1,0 +1,677 @@
+        <!DOCTYPE html>
+        <html lang="en">
+
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+          <link rel="stylesheet" href="style.css" />
+
+          <title>Trial Lens</title>
+
+          <style>
+
+            .header__container::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: -100%;
+              width: 100%;
+              height: 100%;
+              background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+              animation: shimmer 3s infinite;
+              z-index: 1;
+            }
+
+            @keyframes shimmer {
+              0% { left: -100%; }
+              100% { left: 100%; }
+            }
+
+            .header__content h1 {
+              animation: fadeInUp 1s ease-out;
+              background: linear-gradient(45deg, #2563eb, #dc2626);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              background-clip: text;
+            }
+
+            .header__content h3 {
+              animation: fadeInUp 1s ease-out 0.3s both;
+            }
+
+            @keyframes fadeInUp {
+              from {
+                opacity: 0;
+                transform: translateY(30px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
+
+            /* navigation */
+            .nav__links li a {
+              position: relative;
+              transition: all 0.3s ease;
+            }
+
+            .nav__links li a::after {
+              content: '';
+              position: absolute;
+              bottom: -5px;
+              left: 50%;
+              width: 0;
+              height: 3px;
+              background: linear-gradient(45deg, #2563eb, #dc2626);
+              transition: all 0.3s ease;
+              transform: translateX(-50%);
+              border-radius: 2px;
+            }
+
+            .nav__links li a:hover::after {
+              width: 100%;
+            }
+
+            .nav__links li a:hover {
+              transform: translateY(-2px);
+              color: #2563eb;
+            }
+
+            /* cards */
+            .special__card {
+              position: relative;
+              background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+              border-radius: 20px;
+              padding: 30px;
+              box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+              transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+              cursor: pointer;
+              overflow: hidden;
+              border: 2px solid transparent;
+            }
+
+            .special__card::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(220, 38, 38, 0.1));
+              opacity: 0;
+              transition: opacity 0.3s ease;
+              z-index: 0;
+            }
+
+            .special__card:hover::before {
+              opacity: 1;
+            }
+
+            .special__card:hover {
+              transform: translateY(-15px) scale(1.02);
+              box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+              border-color: #2563eb;
+            }
+
+            .special__card * {
+              position: relative;
+              z-index: 1;
+            }
+
+            .special__card h4 {
+              background: linear-gradient(45deg, #2563eb, #dc2626);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              background-clip: text;
+              font-size: 1.5rem;
+              margin-bottom: 15px;
+              transition: all 0.3s ease;
+            }
+
+            .special__card:hover h4 {
+              transform: scale(1.05);
+            }
+
+            /* more buttons */
+            .interactive-btn {
+              display: inline-block;
+              padding: 15px 30px;
+              background: linear-gradient(135deg, #2563eb, #1d4ed8);
+              color: white;
+              text-decoration: none;
+              border-radius: 50px;
+              font-weight: 600;
+              transition: all 0.3s ease;
+              position: relative;
+              overflow: hidden;
+              margin: 10px;
+              border: none;
+              cursor: pointer;
+              font-size: 1rem;
+            }
+
+            .interactive-btn::before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              width: 0;
+              height: 0;
+              background: rgba(255, 255, 255, 0.2);
+              border-radius: 50%;
+              transition: all 0.6s ease;
+              transform: translate(-50%, -50%);
+            }
+
+            .interactive-btn:hover::before {
+              width: 300px;
+              height: 300px;
+            }
+
+            .interactive-btn:hover {
+              transform: translateY(-3px);
+              box-shadow: 0 15px 30px rgba(37, 99, 235, 0.4);
+            }
+
+            .interactive-btn.secondary {
+              background: linear-gradient(135deg, #dc2626, #b91c1c);
+            }
+
+            .interactive-btn.secondary:hover {
+              box-shadow: 0 15px 30px rgba(220, 38, 38, 0.4);
+            }
+
+            /*action buttons*/
+            .floating-actions {
+              position: fixed;
+              bottom: 30px;
+              right: 30px;
+              display: flex;
+              flex-direction: column;
+              gap: 15px;
+              z-index: 1000;
+            }
+
+            .floating-btn {
+              width: 60px;
+              height: 60px;
+              border-radius: 50%;
+              border: none;
+              cursor: pointer;
+              font-size: 1.5rem;
+              color: white;
+              transition: all 0.3s ease;
+              box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+
+            .floating-btn.primary {
+              background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            }
+
+            .floating-btn.secondary {
+              background: linear-gradient(135deg, #dc2626, #b91c1c);
+            }
+
+            .floating-btn:hover {
+              transform: scale(1.1);
+              box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            }
+
+            /* prog bar */
+            .progress-indicator {
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 4px;
+              background: rgba(37, 99, 235, 0.2);
+              z-index: 1000;
+            }
+
+            .progress-bar {
+              height: 100%;
+              background: linear-gradient(90deg, #2563eb, #dc2626);
+              width: 0%;
+              transition: width 0.1s ease;
+            }
+
+            /* statistics */
+            .stats-container {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+              gap: 30px;
+              margin: -100px 0;
+              padding: 40px 0;
+            }
+
+            .stat-item {
+              text-align: center;
+              padding: 30px 20px;
+              background: linear-gradient(135deg, #ffffff, #f8fafc);
+              border-radius: 20px;
+              box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+              transition: all 0.3s ease;
+              cursor: pointer;
+            }
+
+            .stat-item:hover {
+              transform: translateY(-10px);
+              box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            }
+
+            .stat-number {
+              font-size: 3rem;
+              font-weight: 800;
+              background: linear-gradient(45deg, #2563eb, #dc2626);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              background-clip: text;
+              margin-bottom: 10px;
+              counter-reset: number;
+              animation: countUp 2s ease-out;
+            }
+
+            .stat-label {
+              font-size: 1.1rem;
+              color: #64748b;
+              font-weight: 600;
+            }
+
+            @keyframes countUp {
+              from { opacity: 0; transform: translateY(20px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+
+            /* faq section */
+            .faq-item {
+              background: white;
+              border-radius: 15px;
+              margin-bottom: 20px;
+              overflow: hidden;
+              box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+              transition: all 0.3s ease;
+            }
+
+            .faq-item:hover {
+              box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            }
+
+            .faq-question {
+              padding: 25px 30px;
+              background: linear-gradient(135deg, #f8fafc, #ffffff);
+              cursor: pointer;
+              font-weight: 600;
+              font-size: 1.1rem;
+              color: #1e293b;
+              border: none;
+              width: 100%;
+              text-align: left;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              transition: all 0.3s ease;
+            }
+
+            .faq-question:hover {
+              background: linear-gradient(135deg, #e2e8f0, #f1f5f9);
+              color: #2563eb;
+            }
+
+            .faq-question::after {
+              content: '+';
+              font-size: 1.5rem;
+              font-weight: bold;
+              color: #2563eb;
+              transition: transform 0.3s ease;
+            }
+
+            .faq-question.active::after {
+              transform: rotate(45deg);
+            }
+
+            .faq-answer {
+              max-height: 0;
+              overflow: hidden;
+              transition: max-height 0.3s ease;
+              background: white;
+            }
+
+            .faq-answer.active {
+              max-height: 200px;
+            }
+
+            .faq-answer-content {
+              padding: 25px 30px;
+              color: #64748b;
+              line-height: 1.6;
+            }
+
+            /* responsive deisgn */
+            @media (max-width: 768px) {
+              .floating-actions {
+                bottom: 20px;
+                right: 20px;
+              }
+
+              .floating-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+              }
+
+              .stat-number {
+                font-size: 2rem;
+              }
+
+              .interactive-btn {
+                padding: 12px 24px;
+                font-size: 0.9rem;
+              }
+            }
+          </style>
+        </head>
+
+        <body>
+          <!-- prog indicator -->
+          <div class="progress-indicator">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+
+          <nav>
+            <div class="nav__header">
+              <div class="logo nav__logo">
+                <a href="#">Trial<span> Lens</span></a>
+              </div>
+              <div class="nav__menu__btn" id="menu-btn">
+                <span><i class="ri-menu-line"></i></span>
+              </div>
+            </div>
+            <ul class="nav__links" id="nav-links">
+              <li><a href="#home">Home</a></li>
+              <li><a href="trials.html">Trial Finder</a></li>
+              <li><a href="bot.html">Scout AI</a></li>
+              <li><a href="resources.html">Resources</a></li> 
+            </ul>
+            <div class="nav__btn"></div>
+          </nav>
+
+          <header class="section__container header__container" id="home">
+            <div class="header__image">
+              <img src="logooo.png" alt="header" style="display: block; margin: 0 auto; width: 70%; height: 60%;">
+            </div>
+
+            <div class="header__content">
+              <h1>Trial<span>Lens</span>.</h1>
+              <h3>Clarity, connection, and compassionate care at every step of your cancer trial journey.</h3>
+
+              <div style="margin-top: 30px;">
+                <a href="trials.html" class="interactive-btn">🔍 Find Trials Now</a>
+                <a href="bot.html" class="interactive-btn secondary">🤖 Ask Scout AI</a>
+              </div>
+            </div>
+          </header>
+
+          <!-- static stats -->
+          <section class="section__container">
+            <div class="stats-container">
+              <div class="stat-item">
+                <div class="stat-number" id="stat1">22985</div>
+                <div class="stat-label">Active Recruiting Trials in the United States </div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" id="stat2">95%</div>
+                <div class="stat-label">% Patients Missing Opportunities</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" id="stat3">20+</div>
+                <div class="stat-label">Languages Supported</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" id="stat4">24</div>
+                <div class="stat-label">Hours Daily Support</div>
+              </div>
+            </div>
+          </section>
+
+
+          <section class="section__container special__container" id="special">
+            <h2 class="section__header">What is TrialLens and how does it work?</h2>
+            <p class="section__description">
+              TrialLens is your clear window into the world of cancer clinical trials. It takes the confusion out of finding and understanding trial opportunities by translating complex medical jargon into plain, easy-to-digest language.
+              <br><br>
+              <img src="ladydoctor.png" alt="header" style="display: block; margin: 0 auto; width: 90%; height: 70%; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
+            </p>
+
+            <div class="special__grid">
+              <div class="special__card" onclick="expandCard(this)">
+                <h4>01 – Find a Match</h4>
+                <p>
+                  We summarize each trial's goal, location, duration, what's expected of you, possible benefits, and potential risks — all in clear, plain language. You can compare trials side-by-side to see which feels right for you.
+                </p>
+                <div class="card-expand" style="display: none;">
+                  <p><strong>Additional Details:</strong> Our AI-powered matching system uses advanced algorithms to ensure the most relevant trials appear first, saving you hours of research time.</p>
+                  <a href="trials.html" class="interactive-btn" style="margin-top: 15px;">Try It Now</a>
+                </div>
+              </div>
+
+              <div class="special__card" onclick="expandCard(this)">
+                <h4>02 - Understand Options</h4>
+                <p>
+                  We break down complex medical terminology into simple, understandable language. Every trial comes with clear explanations of procedures, timeline, and what to expect throughout the process.
+                </p>
+                <div class="card-expand" style="display: none;">
+                  <p><strong>Key Features:</strong> Interactive timelines, visual guides, and multilingual support ensure you fully understand every aspect of your potential trial participation.</p>
+                  <a href="resources.html" class="interactive-btn secondary" style="margin-top: 15px;">Learn More</a>
+                </div>
+              </div>
+
+              <div class="special__card" onclick="expandCard(this)">
+                <h4>03 - Next Steps</h4>
+                <p>
+                  We help you prepare to contact the trial site with a checklist, draft email or phone script, and a list of documents you might need. If you're ready, you can reach out directly to the trial coordinator.
+                </p>
+                <div class="card-expand" style="display: none;">
+                  <p><strong>Support Included:</strong> Personalized communication templates, document preparation guides, and 24/7 chat support to help you through every step.</p>
+                  <a href="bot.html" class="interactive-btn" style="margin-top: 15px;">Get Prepared</a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- faq -->
+          <section class="section__container">
+            <h2 class="section__header">Frequently Asked Questions</h2>
+            <div class="faq-container">
+              <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                  What exactly are cancer clinical trials?
+                </button>
+                <div class="faq-answer">
+                  <div class="faq-answer-content">
+                    Cancer clinical trials are research studies that test new ways to prevent, detect, treat, or manage cancer. They give patients access to promising new treatments before they are widely available, while helping doctors learn which approaches work best.
+                  </div>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                  How do I know if I'm eligible for a trial?
+                </button>
+                <div class="faq-answer">
+                  <div class="faq-answer-content">
+                    Each trial has specific eligibility criteria including cancer type, stage, previous treatments, age, and overall health. Our Trial Finder tool helps match you with relevant trials based on your specific situation.
+                  </div>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                  Are clinical trials safe?
+                </button>
+                <div class="faq-answer">
+                  <div class="faq-answer-content">
+                    Clinical trials follow strict safety protocols and are closely monitored by medical experts and regulatory agencies. All potential risks and benefits are clearly explained before you decide to participate.
+                  </div>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                  How much do clinical trials cost?
+                </button>
+                <div class="faq-answer">
+                  <div class="faq-answer-content">
+                    Most clinical trials provide the experimental treatment at no cost to participants. Some trials may also cover additional medical costs, travel expenses, or provide compensation for time and participation.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section__container special__container">
+            <h5 class="section__header">What is the issue we are trying to solve?</h5>
+            <p class="section__description">
+              Every year, thousands of cancer patients miss out on potentially life-saving clinical trials — not because they aren't eligible, but because the information is buried in medical jargon, scattered across databases, and hard to navigate. Less than 5% of adult cancer patients enroll in trials, even though trials are critical for advancing treatments and improving survival rates.
+  
+              By making trial information clear and accessible, we’re helping more patients find and join research that could save lives. Every match and every story adds to the data we can share with policymakers, researchers, and healthcare leaders to break down barriers to participation. Our mission goes beyond guidance — it’s about shaping a future where clinical trial access is equitable, transparent, and a standard part of cancer care.
+
+            </p>
+
+            <div style="text-align: center; margin-top: 40px;">
+              <a href="trials.html" class="interactive-btn">Start Your Search Today</a>
+              <a href="resources.html" class="interactive-btn secondary">Learn About Trials</a>
+            </div>
+          </section>
+
+          <!-- action buttons -->
+          <div class="floating-actions">
+            <button class="floating-btn primary" onclick="scrollToTop()" title="Back to Top">
+              ↑
+            </button>
+            <button class="floating-btn secondary" onclick="openChat()" title="Get Help">
+              💬
+            </button>
+          </div>
+
+          <footer class="footer" id="contact">
+            <div class="section__container footer__container">
+              <div class="footer__col">
+                <div class="logo footer__logo">
+                  <a href="#">Trial<span>Lens</span></a>
+                </div>
+                <p class="section__description">
+                  Learn more about cancer trials with confidence.
+                </p>
+              </div>
+            </div>
+          </footer>
+
+          <script>
+            // prog bar
+            window.addEventListener('scroll', () => {
+              const scrollTop = window.pageYOffset;
+              const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+              const scrollPercent = (scrollTop / documentHeight) * 100;
+              document.getElementById('progressBar').style.width = scrollPercent + '%';
+            });
+
+            // ani num
+            function animateNumber(element, target) {
+              const numberEl = element.querySelector('.stat-number');
+              const duration = 2000;
+              const start = parseInt(numberEl.textContent) || 0;
+              const increment = (target - start) / (duration / 16);
+              let current = start;
+
+              const timer = setInterval(() => {
+                current += increment;
+                if ((increment > 0 && current >= target) || (increment < 0 && current <= target)) {
+                  current = target;
+                  clearInterval(timer);
+                }
+                numberEl.textContent = Math.floor(current).toLocaleString();
+              }, 16);
+            }
+
+            // card expansion
+            function expandCard(card) {
+              const expandDiv = card.querySelector('.card-expand');
+              const isExpanded = expandDiv.style.display === 'block';
+
+              //close cards
+              document.querySelectorAll('.card-expand').forEach(div => {
+                div.style.display = 'none';
+              });
+
+              if (!isExpanded) {
+                expandDiv.style.display = 'block';
+                expandDiv.style.animation = 'fadeInUp 0.3s ease';
+              }
+            }
+
+            // FAQ toggle
+            function toggleFAQ(button) {
+              const answer = button.nextElementSibling;
+              const isActive = button.classList.contains('active');
+
+              // auto close faqs
+              document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('active'));
+              document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('active'));
+
+              if (!isActive) {
+                button.classList.add('active');
+                answer.classList.add('active');
+              }
+            }
+
+            function scrollToTop() {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            function openChat() {
+              window.open('bot.html', '_blank');
+            }
+
+            // animation on scroll
+            const observerOptions = {
+              threshold: 0.1,
+              rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  entry.target.style.opacity = '1';
+                  entry.target.style.transform = 'translateY(0)';
+                }
+              });
+            }, observerOptions);
+
+            document.addEventListener('DOMContentLoaded', () => {
+              document.querySelectorAll('.special__card, .stat-item, .faq-item').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.6s ease';
+                observer.observe(el);
+              });
+
+              setTimeout(() => {
+                const firstStat = document.querySelector('.stat-item');
+                if (firstStat) animateNumber(firstStat, 22985);
+              }, 1000);
+            });
+
+      
+            document.getElementById('menu-btn')?.addEventListener('click', () => {
+              document.getElementById('nav-links').classList.toggle('active');
+            });
+          </script>
+        </body>
+        </html>
+    
