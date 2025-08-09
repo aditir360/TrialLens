@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Resources - TrialLens</title>
+  <style>
+    /* same style css */
+    .checklist-section {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+
+    .checklist-items {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background: #f8f9ff;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-left: 3px solid transparent;
+    }
+
+    .checklist-item:hover {
+      background: #f0f7ff;
+      border-left-color: #667eea;
+    }
+
+    .checklist-item.completed {
+      background: #e8f5e8;
+      border-left-color: #4CAF50;
+    }
+
+    .checklist-checkbox {
+      display: none;
+    }
+
+    .checkmark {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      position: relative;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: all 0.2s ease;
+    }
+
+    .checklist-checkbox:checked + .checkmark {
+      background: #4CAF50;
+      border-color: #4CAF50;
+    }
+
+    .checklist-checkbox:checked + .checkmark::after {
+      content: '✓';
+      position: absolute;
+      color: white;
+      font-size: 14px;
+      top: -2px;
+      left: 3px;
+    }
+
+    .item-content {
+      flex: 1;
+    }
+
+    .item-content strong {
+      display: block;
+      margin-bottom: 0.3rem;
+      color: #333;
+    }
+
+    .item-content p {
+      color: #666;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .checklist-header {
+      color: #667eea;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 0.5rem;
+    }
+
+    .checklist-header.questions {
+      color: #764ba2;
+      border-bottom-color: #764ba2;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      margin: 0.5rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn.reset {
+      background: #f44336;
+    }
+
+    .btn.print {
+      background: #4CAF50;
+    }
+
+    .progress-container {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .progress-bar {
+      background: #e0e0e0;
+      border-radius: 10px;
+      padding: 3px;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-fill {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      height: 20px;
+      border-radius: 8px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .template-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      margin: 2rem 0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      border-left: 4px solid #667eea;
+    }
+
+    .template-content {
+      margin-top: 1rem;
+    }
+
+    #phone-template .template-container {
+      border-left-color: #764ba2;
+    }
+
+    /* progess bar */
+    .progress-indicator {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(37, 99, 235, 0.2);
+      z-index: 1000;
+    }
+
+    .progress-bar-top {
+      height: 100%;
+      background: linear-gradient(90deg, #2563eb, #dc2626);
+      width: 0%;
+      transition: width 0.1s ease;
+    }
+
+    /* floating buttons */
+    .floating-actions {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      z-index: 1000;
+    }
+
+    .floating-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      color: white;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .floating-btn.primary {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    }
+
+    .floating-btn.secondary {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+    }
+
+    .floating-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    /* design */
+    @media (max-width: 768px) {
+      .floating-actions {
+        bottom: 20px;
+        right: 20px;
+      }
+
+      .floating-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- actual top progess bar -->
+  <div class="progress-indicator">
+    <div class="progress-bar-top" id="progressBar"></div>
+  </div>
+
+  <nav>
+    <div class="nav__header">
+      <div class="logo nav__logo">
+        <a href="#">Trial<span>Lens</span></a>
+      </div>
+      <div class="nav__menu__btn" id="menu-btn">
+        <span><i class="ri-menu-line"></i></span>
+      </div>
+    </div>
+    <ul class="nav__links" id="nav-links">
+      <li><a href="index.html#home">Home</a></li>
+      <li><a href="trials.html">Trial Finder</a></li>
+      <li><a href="bot.html">Scout AI</a></li>
+      <li><a href="resources.html">Resources</a></li>
+    </ul>
+  </nav>
+
+  <section class="section__container special__container">
+    <h2 class="section__header">Helpful Resources</h2>
+    <p class="section__description">
+      Browse trusted sources to learn more about cancer clinical trials, treatment options, and patient rights.
+    </p>
+    <div class="special__grid">
+      <div class="special__card">
+        <h4>NIH Clinical Trials</h4>
+        <p>The official U.S. government site for clinical trials. Search by condition, location, or trial ID.</p>
+        <div class="special__footer">
+          <a href="https://clinicaltrials.gov/" target="_blank">Visit NIH</a>
+        </div>
+      </div>
+      <div class="special__card">
+        <h4>American Cancer Society</h4>
+        <p>Understand how clinical trials work, what to expect, and how to prepare.</p>
+        <div class="special__footer">
+          <a href="https://www.cancer.org" target="_blank">Visit ACS</a>
+        </div>
+      </div>
+      <div class="special__card">
+        <h4>Trial Matching Tools</h4>
+        <p>Explore other tools like TrialJectory and SmartPatients for support and matching.</p>
+        <div class="special__footer">
+          <a href="https://www.trialjectory.com/" target="_blank">TrialJectory</a><br>
+          <a href="https://www.smartpatients.com/" target="_blank">SmartPatients</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- the checklist -->
+  <section class="section__container special__container">
+    <h2 class="section__header">Trial Contact Prep Checklist</h2>
+    <p class="section__description">
+      Use this checklist to prepare before contacting a clinical trial site. Check off items as you gather them.
+    </p>
+    
+    <div class="checklist-grid">
+      <!-- docs -->
+      <div class="checklist-section">
+        <h3 class="checklist-header">Documents to Gather</h3>
+        <div class="checklist-items">
+          <label class="checklist-item">
+            <input type="checkbox" class="checklist-checkbox">
+            <span class="checkmark"></span>
+            <div class="item-content">
+              <strong>Medical Records</strong>
+              <p>Complete medical history, including diagnosis date and staging information</p>
+            </div>
+          </label>
+          
+          <label class="checklist-item">
+            <input type="checkbox" class="checklist-checkbox">
+            <span class="checkmark"></span>
+            <div class="item-content">
+              <strong>Treatment History</strong>
+              <p>List of all previous treatments (chemo, radiation, surgery, medications)</p>
+            </div>
+          </label>
+          
+          <label class="checklist-item">
+            <input type="checkbox" class="checklist-checkbox">
+            <span class="checkmark"></span>
+            <div class="item-content">
+              <strong>Lab Results</strong>
+              <p>Recent blood work, imaging scans, biopsy reports, and pathology results</p>
+            </div>
+          </label>
+          
+          <label class="checklist-item">
+            <input type="checkbox" class="checklist-checkbox">
+            <span class="checkmark"></span>
+            <div class="item-content">
+              <strong>Insurance Information</strong>
+              <p>Insurance cards, pre-authorization forms, coverage details</p>
+            </div>
+          </label>
+          
+          <label class="checklist-item">
+            <input type="checkbox" class="checklist-checkbox">
+            <span class="checkmark"></span>
+            <div class="item-content">
+              <strong>Current Medications</strong>
+              <p>Complete list including dosages, supplements, and over-the-counter drugs</p>
+            </div>
+          </label>
+          
+          <label class="checklist-item">
+            <input type="checkbox" class="checklist-checkbox">
+            <span class="checkmark"></span>
+            <div class="item-content">
+              <strong>Emergency Contacts</strong>
+              <p>Contact information for family members and current healthcare team</p>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- qna -->
+      <div class="checklist-section">
+        <h3 class="checklist-header questions">Key Questions to Ask</h3>
+        <div class="checklist-items">
+          <label class="checklist-item">
+            <input type="checkbox" class="checklist-checkbox">
+            <span class="checkmark"></span>
+            <div class="item-content">
+              <strong>Eligibility Requirements</strong>
+              <p>"What are the specific eligibility criteria for this trial?"</p>
+            </div>
+          </label>
+          
+          <label class="checklist-item">
+            <input type="checkbox" class="checklist-checkbox">
+            <span class="checkmark"></span>
+            <div class="item-content">
+              <strong>Treatment Details</strong>
+              <p>"What treatment will I receive and how does it differ from standard care?"</p>
+            </div>
+          </label>
+          
+          <label class="checklist-item">
+            <input type="checkbox" class="checklist-checkbox">
+            <span class="checkmark"></span>
+            <div class="item-content">
+              <strong>Time Commitment</strong>
+              <p>"How often are appointments and how long will the trial last?"</p>
+            </div>
+          </label>
+          
+          <label class="checklist-item">
+            <input type="checkbox" class="checklist-checkbox">
+            <span class="checkmark"></span>
+            <div class="item-content">
+              <strong>Side Effects & Risks</strong>
+              <p>"What are the potential side effects and how are they managed?"</p>
+            </div>
+          </label>
+          
+          <label class="checklist-item">
+            <input type="checkbox" class="checklist-checkbox">
+            <span class="checkmark"></span>
+            <div class="item-content">
+              <strong>Costs & Coverage</strong>
+              <p>"What costs will be covered by the trial vs. my insurance?"</p>
+            </div>
+          </label>
+          
+          <label class="checklist-item">
+            <input type="checkbox" class="checklist-checkbox">
+            <span class="checkmark"></span>
+            <div class="item-content">
+              <strong>Exit Options</strong>
+              <p>"Can I leave the trial at any time? What happens if I do?"</p>
+            </div>
+          </label>
+          
+          <label class="checklist-item">
+            <input type="checkbox" class="checklist-checkbox">
+            <span class="checkmark"></span>
+            <div class="item-content">
+              <strong>Results & Follow-up</strong>
+              <p>"How will I receive updates on the trial results and my progress?"</p>
+            </div>
+          </label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+      <p id="progress-text" class="progress-text">Progress: 0/13 items completed</p>
+    </div>
+
+    <!-- template gen -->
+    <div style="text-align: center; margin: 2rem 0;">
+      <button id="generate-email" class="btn">Generate Email Template</button>
+      <button id="generate-phone" class="btn">Generate Phone Script</button>
+    </div>
+
+    <div id="templates-container" style="display: none;">
+      <!-- email temp -->
+      <div id="email-template" class="template-container">
+        <h3 style="color: #667eea; margin-bottom: 1rem;">Email Template</h3>
+        <div class="template-content">
+          <textarea id="email-content" style="width: 100%; height: 400px; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; font-family: Arial, sans-serif; font-size: 14px;"></textarea>
+          <div style="margin-top: 1rem; text-align: center;">
+            <button id="copy-email" class="btn print">Copy Email Template</button>
+            <button id="send-email" class="btn">Open in Email Client</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- phone temp -->
+      <div id="phone-template" class="template-container">
+        <h3 style="color: #764ba2; margin-bottom: 1rem;">Phone Script</h3>
+        <div class="template-content">
+          <textarea id="phone-content" style="width: 100%; height: 400px; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; font-family: Arial, sans-serif; font-size: 14px;"></textarea>
+          <div style="margin-top: 1rem; text-align: center;">
+            <button id="copy-phone" class="btn print">Copy Phone Script</button>
+            <button id="print-phone" class="btn">Print Script</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- action buttons -->
+  <div class="floating-actions">
+    <button class="floating-btn primary" onclick="scrollToTop()" title="Back to Top">
+      ↑
+    </button>
+    <button class="floating-btn secondary" onclick="openHelp()" title="Get Help">
+      💬
+    </button>
+  </div>
+  
+  <footer class="footer" id="contact">
+    <div class="section__container footer__container">
+      <div class="footer__col">
+        <div class="logo footer__logo">
+          <a href="#">Trial<span>Lens</span></a>
+        </div>
+        <p class="section__description">
+          Learn more about cancer trials with confidence.
+        </p>
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    // prog animation
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.pageYOffset;
+      const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = (scrollTop / documentHeight) * 100;
+      document.getElementById('progressBar').style.width = scrollPercent + '%';
+    });
+
+    // action func
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openHelp() {
+      window.open('bot.html', '_blank');
+    }
+
+    // checklist working
+    function initializeChecklist() {
+      const checkboxes = document.querySelectorAll('.checklist-checkbox');
+      const progressFill = document.getElementById('progress-fill');
+      const progressText = document.getElementById('progress-text');
+      const totalItems = checkboxes.length;
+
+      function updateProgress() {
+        const checkedCount = document.querySelectorAll('.checklist-checkbox:checked').length;
+        const percentage = (checkedCount / totalItems) * 100;
+        
+        progressFill.style.width = percentage + '%';
+        progressText.textContent = `Progress: ${checkedCount}/${totalItems} items completed`;
+        
+        if (checkedCount === totalItems) {
+          progressText.innerHTML = `Progress: ${checkedCount}/${totalItems} items completed 🎉 <span style="color: #4CAF50;">Ready to contact trials!</span>`;
+        }
+      }
+
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+          const item = this.closest('.checklist-item');
+          if (this.checked) {
+            item.classList.add('completed');
+          } else {
+            item.classList.remove('completed');
+          }
+          updateProgress();
+        });
+      });
+
+      // progress
+      updateProgress();
+    }
+
+    // doc when loaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeChecklist);
+    } else {
+      initializeChecklist();
+    }
+
+    // contact temp
+    const emailTemplate = `Subject: Inquiry About Clinical Trial Participation
+
+Dear Clinical Trial Coordinator,
+
+I hope this message finds you well. I am writing to express my interest in learning more about a clinical trial that may be relevant to my current medical situation.
+
+PATIENT INFORMATION:
+• Name: [Your Full Name]
+• Age: [Your Age]
+• Diagnosis: [Your Cancer Type and Stage]
+• Date of Diagnosis: [MM/DD/YYYY]
+• Current Location: [Your City, State]
+
+MEDICAL BACKGROUND:
+• Previous Treatments: [List treatments you've received - chemotherapy, radiation, surgery, etc.]
+• Current Medications: [List current medications and supplements]
+• Oncologist: [Your current doctor's name and practice]
+
+QUESTIONS I HAVE:
+1. What are the specific eligibility criteria for this trial?
+2. What treatment will I receive and how does it differ from standard care?
+3. How often are appointments and how long will the trial last?
+4. What are the potential side effects and how are they managed?
+5. What costs will be covered by the trial vs. my insurance?
+6. Can I leave the trial at any time? What happens if I do?
+7. How will I receive updates on the trial results and my progress?
+
+AVAILABILITY:
+I am available for a phone conversation at your convenience. My contact information is:
+• Phone: [Your Phone Number]
+• Email: [Your Email Address]
+• Best times to reach me: [Your preferred times]
+
+I have gathered my medical records, recent lab results, and insurance information, and I'm prepared to provide any additional documentation you may need to determine my eligibility.
+
+Thank you for your time and consideration. I look forward to hearing from you about next steps in the process.
+
+Sincerely,
+[Your Full Name]
+[Your Phone Number]
+[Your Email Address]`;
+
+    const phoneScript = `CLINICAL TRIAL COORDINATOR PHONE SCRIPT
+
+INTRODUCTION:
+"Hello, my name is [Your Name]. I'm calling to inquire about a clinical trial that might be relevant to my cancer diagnosis. Do you have a few minutes to speak with me about potential participation?"
+
+BASIC INFORMATION TO SHARE:
+✓ "I am [age] years old and was diagnosed with [cancer type and stage] on [date]"
+✓ "My current oncologist is Dr. [name] at [practice/hospital]"
+✓ "I have previously received [list treatments - chemo, radiation, surgery, etc.]"
+
+KEY QUESTIONS TO ASK:
+
+1. ELIGIBILITY:
+   "What are the specific eligibility criteria for this trial? Based on what I've shared, do I seem like a potential candidate?"
+
+2. TREATMENT DETAILS:
+   "Can you explain what treatment I would receive and how it differs from standard care options?"
+
+3. LOGISTICS:
+   "How often would I need to come in for appointments? How long is the trial expected to last?"
+
+4. SAFETY & MONITORING:
+   "What are the potential side effects? How closely would my health be monitored during the trial?"
+
+5. FINANCIAL ASPECTS:
+   "What costs would be covered by the trial versus my insurance? Are there any out-of-pocket expenses I should expect?"
+
+6. FLEXIBILITY:
+   "If I decide to participate, can I leave the trial at any time? What would that process look like?"
+
+7. COMMUNICATION:
+   "How would I receive updates about the trial results and my progress throughout the study?"
+
+NEXT STEPS:
+✓ Ask: "What information do you need from me to move forward?"
+✓ Ask: "What documents should I prepare or bring?"
+✓ Ask: "When would be the best time for an in-person consultation?"
+✓ Get contact information and preferred method of follow-up
+
+DOCUMENTS TO MENTION YOU HAVE READY:
+✓ Complete medical records and pathology reports
+✓ Recent lab results and imaging scans
+✓ List of current medications
+✓ Insurance information
+✓ Contact info for current healthcare team
+
+CLOSING:
+"Thank you so much for your time. I really appreciate you explaining this opportunity. What's the best way to follow up with you, and when should I expect to hear back?"
+
+NOTES SECTION:
+[Write down key points during the call]
+• Coordinator Name: ________________
+• Direct Phone/Email: _______________
+• Next Steps: ____________________
+• Follow-up Date: ________________`;
+
+    document.getElementById('generate-email').addEventListener('click', function() {
+      const templatesContainer = document.getElementById('templates-container');
+      const emailContent = document.getElementById('email-content');
+      
+      emailContent.value = emailTemplate;
+      templatesContainer.style.display = 'block';
+      document.getElementById('email-template').style.display = 'block';
+      document.getElementById('phone-template').style.display = 'none';
+      
+      templatesContainer.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.getElementById('generate-phone').addEventListener('click', function() {
+      const templatesContainer = document.getElementById('templates-container');
+      const phoneContent = document.getElementById('phone-content');
+      
+      phoneContent.value = phoneScript;
+      templatesContainer.style.display = 'block';
+      document.getElementById('phone-template').style.display = 'block';
+      document.getElementById('email-template').style.display = 'none';
+      
+      templatesContainer.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Copy functionality
+    document.getElementById('copy-email').addEventListener('click', function() {
+      const emailContent = document.getElementById('email-content');
+      emailContent.select();
+      document.execCommand('copy');
+      
+      this.textContent = 'Copied!';
+      this.style.background = '#4CAF50';
+      setTimeout(() => {
+        this.textContent = 'Copy Email Template';
+        this.style.background = '#4CAF50';
+      }, 2000);
+    });
+
+    document.getElementById('copy-phone').addEventListener('click', function() {
+      const phoneContent = document.getElementById('phone-content');
+      phoneContent.select();
+      document.execCommand('copy');
+      
+      this.textContent = 'Copied!';
+      this.style.background = '#4CAF50';
+      setTimeout(() => {
+        this.textContent = 'Copy Phone Script';
+        this.style.background = '#4CAF50';
+      }, 2000);
+    });
+
+    // open email client
+    document.getElementById('send-email').addEventListener('click', function() {
+      const subject = encodeURIComponent('Inquiry About Clinical Trial Participation');
+      const body = encodeURIComponent(document.getElementById('email-content').value);
+      window.open(`mailto:?subject=${subject}&body=${body}`);
+    });
+
+    // print phone script
+    document.getElementById('print-phone').addEventListener('click', function() {
+      const phoneContent = document.getElementById('phone-content').value;
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Clinical Trial Phone Script - Trial Lens</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+              h1 { color: #667eea; }
+              pre { white-space: pre-wrap; font-family: Arial, sans-serif; }
+            </style>
+          </head>
+          <body>
+            <h1>Clinical Trial Phone Script</h1>
+            <pre>${phoneContent}</pre>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    });
+
+    document.getElementById('menu-btn')?.addEventListener('click', () => {
+      document.getElementById('nav-links').classList.toggle('active');
+    });
+  </script>
+</body>
+</html>
