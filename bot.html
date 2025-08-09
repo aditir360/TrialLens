@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Trial Lens</title>
+  
+  <style>
+    /* style text */
+    .header__content h1 {
+      animation: fadeInUp 1s ease-out;
+      background: linear-gradient(45deg, #2563eb, #dc2626);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header__content h3 {
+      animation: fadeInUp 1s ease-out 0.3s both;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* prog bar */
+    .progress-indicator {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(37, 99, 235, 0.2);
+      z-index: 1000;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #2563eb, #dc2626);
+      width: 0%;
+      transition: width 0.1s ease;
+    }
+
+    /* float buttons */
+    .floating-actions {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      z-index: 1000;
+    }
+
+    .floating-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      color: white;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .floating-btn.primary {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    }
+
+    .floating-btn.secondary {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+    }
+
+    .floating-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+
+    @media (max-width: 768px) {
+      .floating-actions {
+        bottom: 20px;
+        right: 20px;
+      }
+
+      .floating-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- prog indicator -->
+  <div class="progress-indicator">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <nav>
+    <div class="nav__header">
+      <div class="logo nav__logo">
+        <a href="#">Trial<span> Lens</span></a>
+      </div>
+      <div class="nav__menu__btn" id="menu-btn">
+        <span><i class="ri-menu-line"></i></span>
+      </div>
+    </div>
+    <ul class="nav__links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="trials.html">Trial Finder</a></li>
+      <li><a href="bot.html">Scout AI</a></li>
+      <li><a href="resources.html">Resources</a></li>
+    </ul>
+    <div class="nav__btn">
+    </div>
+  </nav>
+  
+  <header class="section__container header__container" id="home">
+    <div class="header__image">
+      <img src="logooo.png" alt="header" style="display: block; margin: 0 auto; width: 70%; height: 60%;">
+    </div>
+    <div class="header__content">
+      <h1> Trial<span>Lens</span>.</h1>
+      <h3>Clarity, connection, and compassionate care at every step of your cancer trial journey.</h3>
+      <p class="section__description">
+      </p>
+    </div>
+  </header>
+  
+  <!--the actual chatbpt -->
+  <section class="section__container special__container" id="feature">
+    <h2 class="section__header"> Welcome to Scout - Your personal question navigator.</h2>
+    <p class="section__description">
+      Welcome to <b>Scout</b>, your compassionate AI friend to understanding and navigating cancer clinical trials. You can ask it questions about available trials, eligibility, and what participation involves — from the trial's goals and location to its duration, expectations, potential benefits, and risks. It can also explain why a trial might be a good match for you, all in plain, easy-to-understand language. Whether you're exploring treatment options, preparing to contact a trial site, or just curious, Scout is here to help. Additonally, <b>it's multilingual</b>, so you can get support in the language you're most comfortable with.
+    </p>
+    <section id="bot">
+      <br></br>
+      <div class="chat-container">
+        <ul id="conversation">
+          <span class="bot-avatar"></span>
+          <li class="user-message">My name is Scout and I will be your AI assistant for today!</li>
+          <li class="bot-message">
+            <span class="bot-avatar"></span>
+            <div class="bot-bubble">
+              Hello! How can I assist you today with questions or information about cancer clinical trials?
+            </div>
+          </li>
+        </ul>
+      </div> <br></br>
+      <input size="120" type="text" id="user-input" width: 50% placeholder="Type something ... "><br></br>
+      <button id="submit-button" class="btn">Send</button>
+      <div id="conversation">
+    </section>
+    <br></br>
+  </section>
+
+  <!-- buttons. -->
+  <div class="floating-actions">
+    <button class="floating-btn primary" onclick="scrollToTop()" title="Back to Top">
+      ↑
+    </button>
+    <button class="floating-btn secondary" onclick="openHelp()" title="Get Help">
+      💬
+    </button>
+  </div>
+
+  <script src="https://wizard-orpheus.hackclub.dev/wizard_orpheus.js"></script>
+  <script src="script.js"></script>
+  
+  <footer class="footer" id="contact">
+    <div class="section__container footer__container">
+      <div class="footer__col">
+        <div class="logo footer__logo">
+          <a href="#">Trial<span>Lens</span></a>
+        </div>
+        <p class="section__description">
+          Learn more about cancer trials with confidence.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // prog bar
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.pageYOffset;
+      const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = (scrollTop / documentHeight) * 100;
+      document.getElementById('progressBar').style.width = scrollPercent + '%';
+    });
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openHelp() {
+      alert('Help feature coming soon!');
+    }
+
+    document.getElementById('menu-btn')?.addEventListener('click', () => {
+      document.getElementById('nav-links').classList.toggle('active');
+    });
+  </script>
+</body>
+</html>
